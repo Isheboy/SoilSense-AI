@@ -1,4 +1,5 @@
 import ee  # type: ignore
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 
@@ -8,7 +9,11 @@ from typing import Dict, List, Any
 def initialize_earth_engine() -> bool:
     """Initialize Earth Engine API"""
     try:
-        ee.Initialize()  # type: ignore
+        project_id = os.getenv("EARTHENGINE_PROJECT")
+        if project_id:
+            ee.Initialize(project=project_id)  # type: ignore
+        else:
+            ee.Initialize()  # type: ignore
         return True
     except Exception as e:
         print(f"Earth Engine initialization failed: {e}")
