@@ -32,7 +32,8 @@ def calculate_ndvi_time_series(polygon: List[List[float]], start_date: str, end_
     """
     aoi = ee.Geometry.Polygon(polygon)  # type: ignore
     
-    collection = (ee.ImageCollection('COPERNICUS/S2_SR')  # type: ignore
+    # Use the updated Sentinel-2 Harmonized collection
+    collection = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')  # type: ignore
                   .filterBounds(aoi)  # type: ignore
                   .filterDate(start_date, end_date)  # type: ignore
                   .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)))  # type: ignore
@@ -72,7 +73,8 @@ def calculate_degradation_indicators(polygon: List[List[float]], date: str) -> D
     aoi = ee.Geometry.Polygon(polygon)  # type: ignore
     date_obj = datetime.strptime(date, '%Y-%m-%d')
     
-    image = (ee.ImageCollection('COPERNICUS/S2_SR')  # type: ignore
+    # Use the updated Sentinel-2 Harmonized collection
+    image = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')  # type: ignore
              .filterBounds(aoi)  # type: ignore
              .filterDate(date_obj - timedelta(days=30), date_obj)  # type: ignore
              .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20))  # type: ignore

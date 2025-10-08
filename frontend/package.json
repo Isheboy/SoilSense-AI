@@ -1,32 +1,33 @@
 {
-  "name": "soilsense-ai-frontend",
-  "version": "1.0.0",
+  "name": "frontend1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint"
   },
   "dependencies": {
-    "next": "14.0.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.3.2",
-    "@supabase/supabase-js": "^2.38.4",
-    "mapbox-gl": "^2.15.0",
-    "@mapbox/mapbox-gl-draw": "^1.4.3",
-    "recharts": "^2.10.3",
-    "@types/node": "^20.10.0",
-    "@types/react": "^18.2.42",
-    "@types/react-dom": "^18.2.17",
-    "@types/mapbox-gl": "^2.7.18"
+    "@mapbox/mapbox-gl-draw": "^1.5.0",
+    "@supabase/supabase-js": "^2.74.0",
+    "mapbox-gl": "^3.15.0",
+    "next": "15.5.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "recharts": "^3.2.1"
   },
   "devDependencies": {
-    "eslint": "^8.54.0",
-    "eslint-config-next": "14.0.0",
-    "tailwindcss": "^3.3.5",
-    "postcss": "^8.4.31",
-    "autoprefixer": "^10.4.16"
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/mapbox__mapbox-gl-draw": "^1.4.9",
+    "@types/mapbox-gl": "^3.4.1",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

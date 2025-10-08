@@ -109,11 +109,17 @@ async def analyze_soil_degradation(request: AnalysisRequest):
         # Set default date if not provided
         end_date = request.end_date or datetime.now().strftime('%Y-%m-%d')
         
+        print(f"Analyzing area: {request.location_name}")
+        print(f"Polygon: {request.polygon}")
+        print(f"End date: {end_date}")
+        
         # Calculate indicators using Earth Engine
         indicators = calculate_degradation_indicators(
             request.polygon,
             end_date
         )
+        
+        print(f"Indicators calculated: {indicators}")
         
         # Add erosion risk estimate (simplified)
         indicators['erosion_risk'] = 0.3
@@ -139,9 +145,13 @@ async def analyze_soil_degradation(request: AnalysisRequest):
             except Exception as e:
                 print(f"Database save failed: {e}")
         
+        print(f"Analysis completed successfully: {analysis}")
         return analysis
         
     except Exception as e:
+        import traceback
+        print(f"ERROR in analyze_soil_degradation: {str(e)}")
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
 @app.post("/api/recommendations")

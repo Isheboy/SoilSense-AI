@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { AnalysisResult, apiClient } from "@/lib/api";
+"use client";
+
+import React from "react";
 import {
   LineChart,
   Line,
@@ -16,26 +17,28 @@ import {
   Radar,
 } from "recharts";
 
-interface DashboardProps {
-  analysisData: AnalysisResult;
+interface AnalysisResult {
+  degradation_score: number;
+  severity: string;
+  indicators: {
+    vegetation_health: number;
+    moisture_level: number;
+    soil_exposure: number;
+    erosion_risk: number;
+  };
+  recommendations: string[];
+  primary_factors: string[];
+  confidence: number;
+  date: string;
+  location_name: string;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ analysisData }) => {
-  const [recommendations, setRecommendations] = useState<any>(null);
-  const [prediction, setPrediction] = useState<any>(null);
-  const [loadingRec, setLoadingRec] = useState(false);
-  const [loadingPred, setLoadingPred] = useState(false);
+interface DashboardProps {
+  analysisData: AnalysisResult;
+  timeSeries?: Array<{ date: string; ndvi: number }>;
+}
 
-  useEffect(() => {
-    // Fetch recommendations
-    setLoadingRec(true);
-    apiClient
-      .getRecommendations(analysisData)
-      .then((data) => setRecommendations(data))
-      .catch((err) => console.error("Failed to get recommendations:", err))
-      .finally(() => setLoadingRec(false));
-  }, [analysisData]);
-
+const Dashboard: React.FC<DashboardProps> = ({ analysisData, timeSeries }) => {
   // Prepare radar chart data
   const radarData = [
     {
@@ -83,7 +86,7 @@ const Dashboard: React.FC<DashboardProps> = ({ analysisData }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6 bg-white rounded-lg shadow-lg max-h-screen overflow-y-auto">
       {/* Overall Score */}
       <div className="text-center">
         <div className="inline-flex flex-col items-center">
@@ -92,7 +95,7 @@ const Dashboard: React.FC<DashboardProps> = ({ analysisData }) => {
               analysisData.degradation_score
             )}`}
           >
-            {analysisData.degradation_score}
+            {analysisData.degradation_score.toFixed(1)}
           </div>
           <div className="text-sm text-gray-500 mt-1">Degradation Score</div>
           <div
@@ -112,7 +115,7 @@ const Dashboard: React.FC<DashboardProps> = ({ analysisData }) => {
             Vegetation Health
           </div>
           <div className="text-2xl font-bold text-green-900 mt-1">
-            {analysisData.indicators.vegetation_health}%
+            {analysisData.indicators.vegetation_health.toFixed(1)}%
           </div>
         </div>
         <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
@@ -120,7 +123,7 @@ const Dashboard: React.FC<DashboardProps> = ({ analysisData }) => {
             Moisture Level
           </div>
           <div className="text-2xl font-bold text-blue-900 mt-1">
-            {analysisData.indicators.moisture_level}%
+            {analysisData.indicators.moisture_level.toFixed(1)}%
           </div>
         </div>
         <div className="bg-orange-50 p-3 rounded-lg border border-orange-200">
@@ -128,36 +131,39 @@ const Dashboard: React.FC<DashboardProps> = ({ analysisData }) => {
             Soil Exposure
           </div>
           <div className="text-2xl font-bold text-orange-900 mt-1">
-            {analysisData.indicators.soil_exposure}%
+            {analysisData.indicators.soil_exposure.toFixed(1)}%
           </div>
         </div>
         <div className="bg-red-50 p-3 rounded-lg border border-red-200">
           <div className="text-xs text-red-700 font-medium">Erosion Risk</div>
           <div className="text-2xl font-bold text-red-900 mt-1">
-            {analysisData.indicators.erosion_risk}%
+            {analysisData.indicators.erosion_risk.toFixed(1)}%
           </div>
         </div>
       </div>
 
-      {/* Primary Factors */}
-      {analysisData.primary_factors.length > 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-yellow-900 mb-2">
-            🚨 Primary Concerns
-          </h3>
-          <ul className="space-y-1">
-            {analysisData.primary_factors.map((factor, idx) => (
-              <li
-                key={idx}
-                className="text-sm text-yellow-800 flex items-start"
-              >
-                <span className="mr-2">•</span>
-                <span>{factor}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* Recommendations Section (replacing Primary Factors) */}
+      {analysisData.recommendations &&
+        analysisData.recommendations.length > 0 && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <h3 className="text-sm font-semibold text-yellow-900 mb-2">
+              � Key Recommendations
+            </h3>
+            <ul className="space-y-1">
+              {analysisData.recommendations
+                .slice(0, 3)
+                .map((rec: string, idx: number) => (
+                  <li
+                    key={idx}
+                    className="text-sm text-yellow-800 flex items-start"
+                  >
+                    <span className="mr-2">•</span>
+                    <span>{rec}</span>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
 
       {/* Radar Chart */}
       <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -180,26 +186,52 @@ const Dashboard: React.FC<DashboardProps> = ({ analysisData }) => {
         </ResponsiveContainer>
       </div>
 
+      {/* Time Series Chart */}
+      {timeSeries && timeSeries.length > 0 && (
+        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">
+            NDVI Time Series
+          </h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={timeSeries}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+              <YAxis domain={[-1, 1]} />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="ndvi"
+                stroke="#10B981"
+                strokeWidth={2}
+                dot={{ r: 3 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
       {/* AI Recommendations */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
-          <span className="mr-2">🤖</span>
-          AI Recommendations
-        </h3>
-        {loadingRec ? (
-          <div className="flex items-center justify-center py-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-          </div>
-        ) : recommendations ? (
-          <div className="text-sm text-gray-700 whitespace-pre-wrap">
-            {recommendations.recommendations}
-          </div>
-        ) : (
-          <div className="text-sm text-gray-500">
-            Recommendations unavailable. Check API connection.
+      {analysisData.recommendations &&
+        analysisData.recommendations.length > 0 && (
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+              <span className="mr-2">🤖</span>
+              AI Recommendations
+            </h3>
+            <ul className="space-y-2">
+              {analysisData.recommendations.map((rec, idx) => (
+                <li
+                  key={idx}
+                  className="text-sm text-gray-700 flex items-start"
+                >
+                  <span className="mr-2 text-green-600">✓</span>
+                  <span>{rec}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
-      </div>
 
       {/* Metadata */}
       <div className="text-xs text-gray-500 border-t pt-3">

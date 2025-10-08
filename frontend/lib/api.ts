@@ -1,8 +1,19 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+export interface DegradationData {
+  overall_score: number;
+  severity: string;
+  ndvi: number;
+  ndmi: number;
+  bsi: number;
+  vegetation_health: string;
+  moisture_status: string;
+  bare_soil_percentage: number;
+}
+
 export interface AnalysisRequest {
   polygon: number[][];
-  location_name?: string;
+  location_name: string;
   start_date?: string;
   end_date?: string;
 }
@@ -10,70 +21,69 @@ export interface AnalysisRequest {
 export interface AnalysisResult {
   degradation_score: number;
   severity: string;
-  confidence: number;
-  primary_factors: string[];
   indicators: {
     vegetation_health: number;
     moisture_level: number;
     soil_exposure: number;
     erosion_risk: number;
   };
+  recommendations: string[];
+  primary_factors: string[];
+  confidence: number;
   date: string;
   location_name: string;
 }
 
 export interface PredictionResult {
   risk_level: string;
-  risk_score: number;
   confidence: number;
   forecast: Array<{
-    month: number;
-    date: string;
-    projected_score: number;
-    confidence: number;
+    month: string;
+    predicted_score: number;
+    confidence_interval: [number, number];
   }>;
-  key_drivers: string[];
-  prediction_date: string;
-}
-
-export interface RecommendationResult {
-  recommendations: string;
-  severity: string;
-  primary_focus: string[];
-  generated_at: string;
-  confidence: number;
 }
 
 class APIClient {
-  private baseURL: string;
+  private baseUrl: string;
 
-  constructor() {
-    this.baseURL = API_URL;
+  constructor(baseUrl: string = API_URL) {
+    this.baseUrl = baseUrl;
   }
 
   async analyzeArea(data: AnalysisRequest): Promise<AnalysisResult> {
-    const response = await fetch(`${this.baseURL}/api/analyze`, {
+    const response = await fetch(`${this.baseUrl}/api/analyze`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        ...data,
+        start_date: data.start_date || "2023-01-01",
+        end_date: data.end_date || "2023-12-31",
+      }),
     });
 
     if (!response.ok) {
-      throw new Error("Analysis failed");
+      throw new Error("Failed to analyze area");
     }
 
     return response.json();
   }
 
-  async getRecommendations(analysisData: any): Promise<RecommendationResult> {
-    const response = await fetch(`${this.baseURL}/api/recommendations`, {
+  async getRecommendations(
+    polygon: number[][],
+    degradationData: DegradationData
+  ): Promise<{ recommendations: string[] }> {
+    const response = await fetch(`${this.baseUrl}/api/recommendations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(analysisData),
+      body: JSON.stringify({
+        polygon,
+        degradation_data: degradationData,
+      }),
     });
 
     if (!response.ok) {
@@ -83,63 +93,48 @@ class APIClient {
     return response.json();
   }
 
-  async getPrediction(data: AnalysisRequest): Promise<PredictionResult> {
-    const response = await fetch(`${this.baseURL}/api/predict`, {
+  async predictRisk(polygon: number[][]): Promise<PredictionResult> {
+    const response = await fetch(`${this.baseUrl}/api/predict`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        polygon,
+        months_ahead: 6,
+      }),
     });
 
     if (!response.ok) {
-      throw new Error("Prediction failed");
+      throw new Error("Failed to predict risk");
     }
 
     return response.json();
   }
 
-  async getTimeSeries(data: AnalysisRequest) {
-    const response = await fetch(`${this.baseURL}/api/time-series`, {
+  async getTimeSeries(
+    polygon: number[][],
+    startDate: string,
+    endDate: string
+  ): Promise<Array<{ date: string; ndvi: number }>> {
+    const response = await fetch(`${this.baseUrl}/api/time-series`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        polygon,
+        start_date: startDate,
+        end_date: endDate,
+      }),
     });
 
     if (!response.ok) {
       throw new Error("Failed to get time series");
     }
 
-    return response.json();
-  }
-
-  async getLocations() {
-    const response = await fetch(`${this.baseURL}/api/locations`);
-
-    if (!response.ok) {
-      throw new Error("Failed to get locations");
-    }
-
-    return response.json();
-  }
-
-  async getLocationHistory(locationId: number, limit: number = 10) {
-    const response = await fetch(
-      `${this.baseURL}/api/location/${locationId}/history?limit=${limit}`
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to get location history");
-    }
-
-    return response.json();
-  }
-
-  async healthCheck() {
-    const response = await fetch(`${this.baseURL}/api/health`);
-    return response.json();
+    const data = await response.json();
+    return data.time_series;
   }
 }
 
