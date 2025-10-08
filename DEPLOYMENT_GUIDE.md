@@ -5,6 +5,7 @@ This guide will walk you through deploying your SoilSense AI application to make
 ## 📋 Prerequisites
 
 Before you start, make sure you have:
+
 - ✅ GitHub account (you already have one)
 - ✅ All code pushed to GitHub
 - ✅ API keys ready:
@@ -41,6 +42,7 @@ Before you start, make sure you have:
 Fill in the following settings:
 
 **Basic Settings:**
+
 - **Name**: `soilsense-ai-backend` (or any name you prefer)
 - **Region**: Choose closest to your location (e.g., Oregon (US West))
 - **Branch**: `main`
@@ -48,10 +50,12 @@ Fill in the following settings:
 - **Runtime**: `Python 3`
 
 **Build & Deploy:**
+
 - **Build Command**: `pip install -r requirements.txt`
 - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
 
 **Instance Type:**
+
 - Select **"Free"** (scroll down to find it)
 
 ### Step 5: Add Environment Variables
@@ -204,20 +208,24 @@ Now that you have your frontend URL, update the backend:
 ### Backend Issues:
 
 **Problem**: 500 error when analyzing
+
 - **Solution**: Check Render logs for errors
 - **Solution**: Verify all environment variables are set correctly
 - **Solution**: Make sure Earth Engine authentication is working
 
 **Problem**: CORS errors
+
 - **Solution**: Update ALLOWED_ORIGINS to include your Vercel URL
 
 ### Frontend Issues:
 
 **Problem**: Can't connect to backend
+
 - **Solution**: Verify NEXT_PUBLIC_API_URL matches your Render URL exactly
 - **Solution**: Make sure backend is not sleeping (first request wakes it up)
 
 **Problem**: Map doesn't load
+
 - **Solution**: Check NEXT_PUBLIC_MAPBOX_TOKEN is correct
 - **Solution**: Check browser console for errors
 
@@ -226,12 +234,14 @@ Now that you have your frontend URL, update the backend:
 ## 📊 Monitoring & Logs
 
 ### View Backend Logs:
+
 1. Go to Render Dashboard
 2. Click your service
 3. Click "Logs" tab
 4. See real-time server logs
 
 ### View Frontend Logs:
+
 1. Go to Vercel Dashboard
 2. Click your project
 3. Click "Deployments"
@@ -252,11 +262,11 @@ Now that you have your frontend URL, update the backend:
 ## 💰 Cost Information
 
 ### Current Setup (FREE):
+
 - ✅ **Render Free Tier**: 750 hours/month free
   - ⚠️ Service sleeps after 15 min inactivity
   - ⚠️ First request takes ~30 seconds to wake up
-  
-- ✅ **Vercel Free Tier**: 
+- ✅ **Vercel Free Tier**:
   - Unlimited deployments
   - 100 GB bandwidth/month
   - Automatic HTTPS & CDN
@@ -264,11 +274,13 @@ Now that you have your frontend URL, update the backend:
 ### Upgrade Options (Optional):
 
 **Render ($7/month):**
+
 - ✅ No sleeping
 - ✅ Instant responses
 - ✅ 400 hours always-on
 
 **Vercel Pro ($20/month):**
+
 - ✅ Custom domains
 - ✅ More bandwidth
 - ✅ Priority support
@@ -289,6 +301,7 @@ Now that you have your frontend URL, update the backend:
 ## 🆘 Need Help?
 
 If you encounter issues:
+
 1. Check the troubleshooting section above
 2. Review deployment logs on Render/Vercel
 3. Verify all environment variables are correct
