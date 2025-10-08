@@ -152,6 +152,14 @@ async def analyze_soil_degradation(request: AnalysisRequest):
         import traceback
         print(f"ERROR in analyze_soil_degradation: {str(e)}")
         print(traceback.format_exc())
+        
+        # Check if it's an Earth Engine imagery issue
+        if "may not be null" in str(e) or "No satellite imagery" in str(e):
+            raise HTTPException(
+                status_code=400,
+                detail="No satellite imagery available for this area. Please select a land area (not ocean) and try again."
+            )
+        
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
 @app.post("/api/recommendations")

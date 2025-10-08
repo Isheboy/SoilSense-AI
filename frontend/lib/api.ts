@@ -65,7 +65,9 @@ class APIClient {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to analyze area");
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.detail || "Failed to analyze area";
+      throw new Error(errorMessage);
     }
 
     return response.json();

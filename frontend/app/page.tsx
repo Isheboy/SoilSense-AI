@@ -57,7 +57,11 @@ export default function Home() {
       );
       setTimeSeries(timeSeriesData);
     } catch (err) {
-      setError("Failed to analyze area. Please check your backend connection.");
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to analyze area. Please check your backend connection.";
+      setError(errorMessage);
       console.error(err);
     } finally {
       setLoading(false);
