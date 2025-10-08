@@ -7,40 +7,49 @@ Copy and paste these into Render's Environment Variables section:
 Click "+ Add Environment Variable" for EACH of these:
 
 ### 1. Python Version
+
 ```
 NAME_OF_VARIABLE: PYTHON_VERSION
-value: 3.11
+value: 3.11.9
 ```
 
+**⚠️ IMPORTANT**: Must be 3 parts (major.minor.patch), not just 3.11
+
 ### 2. Anthropic API Key
+
 ```
 NAME_OF_VARIABLE: ANTHROPIC_API_KEY
 value: sk-ant-api03-pSC1OBNAfM9lB7IZdnvIkHYm90CQs1jtmRYgTfnf8cUJlrpFQi4zXuFEhhUCfq0cF-eM2u6UbE9nS6a_AQAA
 ```
 
 ### 3. Earth Engine Project
+
 ```
 NAME_OF_VARIABLE: EARTHENGINE_PROJECT
 value: skillful-summer-385809
 ```
 
 ### 4. Supabase URL
+
 ```
 NAME_OF_VARIABLE: SUPABASE_URL
 value: https://vsslvgelusdjbdydrras.supabase.co
 ```
 
 ### 5. Supabase Key
+
 ```
 NAME_OF_VARIABLE: SUPABASE_KEY
 value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzc2x2Z2VsdXNkamJkeWRycmFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk4ODIsImV4cCI6MjA2MDAzNTg4Mn0.N-IeZC_Rqhdt6YsNRVYovQcOuwB1IBbK3OZTdMJ6oeU
 ```
 
 ### 6. Allowed Origins (CORS)
+
 ```
 NAME_OF_VARIABLE: ALLOWED_ORIGINS
 value: *
 ```
+
 (You'll update this later with your Vercel URL)
 
 ---

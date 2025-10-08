@@ -3,15 +3,19 @@
 ## ✅ Part 1: Deploy Backend to Render (15 minutes)
 
 ### Your API Keys (Have These Ready):
+
 ```
+PYTHON_VERSION: 3.11.9
 ANTHROPIC_API_KEY: sk-ant-api03-pSC1OBNAfM9...
 EARTHENGINE_PROJECT: skillful-summer-385809
 SUPABASE_URL: https://vsslvgelusdjbdydrras.supabase.co
 SUPABASE_KEY: eyJhbGciOiJIUzI1NiIsInR5...
-PYTHON_VERSION: 3.11
 ```
 
+**⚠️ Note**: Python version must be `3.11.9` (not `3.11`) - Render requires full version
+
 ### Steps:
+
 1. ☐ Go to https://render.com → Sign up with GitHub
 2. ☐ Click "New +" → "Web Service"
 3. ☐ Connect "SoilSense-AI" repository
@@ -29,6 +33,7 @@ PYTHON_VERSION: 3.11
 ## ✅ Part 2: Deploy Frontend to Vercel (10 minutes)
 
 ### Your API Keys (Have These Ready):
+
 ```
 NEXT_PUBLIC_MAPBOX_TOKEN: pk.eyJ1IjoiaXNoZWJveSIsImEiOi...
 NEXT_PUBLIC_SUPABASE_URL: https://vsslvgelusdjbdydrras.supabase.co
@@ -37,6 +42,7 @@ NEXT_PUBLIC_API_URL: [YOUR RENDER URL FROM PART 1]
 ```
 
 ### Steps:
+
 1. ☐ Go to https://vercel.com → Sign up with GitHub
 2. ☐ Click "Add New..." → "Project"
 3. ☐ Import "SoilSense-AI"
@@ -70,13 +76,16 @@ NEXT_PUBLIC_API_URL: [YOUR RENDER URL FROM PART 1]
 
 ## ⚠️ Common Issues:
 
-**Backend sleeping?** 
+**Backend sleeping?**
+
 - First request takes 30 seconds (free tier limitation)
 
 **CORS error?**
+
 - Update ALLOWED_ORIGINS with your Vercel URL
 
 **Can't connect?**
+
 - Double-check NEXT_PUBLIC_API_URL matches your Render URL
 
 ---
