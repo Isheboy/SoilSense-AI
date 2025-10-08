@@ -7,7 +7,9 @@ Copy and paste these into Render's Environment Variables section:
 Click "+ Add Environment Variable" for EACH of these **5 variables**:
 
 ### ⚠️ IMPORTANT: Python Version
+
 **DO NOT add PYTHON_VERSION as environment variable!**
+
 - Python version is handled by `runtime.txt` file
 - Adding it as env var causes conflicts
 - Render will use `backend/runtime.txt` automatically
