@@ -12,29 +12,30 @@ Looking at your screenshots, you have everything configured EXCEPT the environme
 
 In the "Environment Variables" section (visible in your screenshot):
 
-Click **"+ Add Environment Variable"** and add these **6 variables**:
+Click **"+ Add Environment Variable"** and add these **5 variables**:
+
+**⚠️ DO NOT ADD PYTHON_VERSION!** It's handled by `runtime.txt` automatically.
 
 | NAME_OF_VARIABLE      | value                                                                                                                                                                                                              |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `PYTHON_VERSION`      | `3.11.9`                                                                                                                                                                                                           |
 | `ANTHROPIC_API_KEY`   | `sk-ant-api03-pSC1OBNAfM9lB7IZdnvIkHYm90CQs1jtmRYgTfnf8cUJlrpFQi4zXuFEhhUCfq0cF-eM2u6UbE9nS6a_AQAA`                                                                                                                |
 | `EARTHENGINE_PROJECT` | `skillful-summer-385809`                                                                                                                                                                                           |
 | `SUPABASE_URL`        | `https://vsslvgelusdjbdydrras.supabase.co`                                                                                                                                                                         |
 | `SUPABASE_KEY`        | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzc2x2Z2VsdXNkamJkeWRycmFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0NTk4ODIsImV4cCI6MjA2MDAzNTg4Mn0.N-IeZC_Rqhdt6YsNRVYovQcOuwB1IBbK3OZTdMJ6oeU` |
 | `ALLOWED_ORIGINS`     | `*`                                                                                                                                                                                                                |
 
-**⚠️ IMPORTANT**: Python version must be `3.11.9` (not just `3.11`) - Render requires major.minor.patch format
+**⚠️ IMPORTANT**: Python version (`3.11.9`) is automatically read from `runtime.txt` file
 
 **How to add each variable:**
 
 1. Click "+ Add Environment Variable"
 2. Type the NAME (left field)
 3. Paste the value (right field)
-4. Repeat for all 6 variables
+4. Repeat for all 5 variables (NOT 6!)
 
 ### Step 2: Deploy!
 
-After adding all 6 variables:
+After adding all 5 variables:
 
 1. Scroll to the bottom
 2. Click **"Deploy Web Service"** button
