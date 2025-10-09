@@ -426,7 +426,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Developer**: [@Isheboy](https://github.com/Isheboy)  
 **Built for**: Land ReGen Hackathon 2025  
-**Duration**: 5 days (January 2025)
+**Duration**: 6 days (8th - 13th October 2025)  
+**Event**: [#1MillionDevs4Africa](https://bit.ly/4ln8o27)
 
 ---
 
