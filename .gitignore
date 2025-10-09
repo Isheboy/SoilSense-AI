@@ -22,3 +22,13 @@ package-lock.json
 
 # IDE configurations
 .vscode/
+
+# Documentation folder (not tracked)
+_documentation/
+
+# Service account credentials
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!next.config.js
