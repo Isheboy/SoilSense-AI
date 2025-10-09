@@ -164,7 +164,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
       {/* Search Bar */}
       {mapLoaded && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30 w-full max-w-md px-4">
+        <div className="absolute top-4 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 md:transform z-30 md:w-96">
           <div className="relative">
             <div className="flex items-center bg-white rounded-lg shadow-xl border-2 border-green-500">
               <svg
@@ -245,15 +245,15 @@ const MapComponent: React.FC<MapComponentProps> = ({
         </div>
       )}
 
-      {/* Large Drawing Button */}
-      {mapLoaded && !selectedArea && !searchQuery && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30">
+      {/* Large Drawing Button - Only show when no drawing and no search */}
+      {mapLoaded && !selectedArea && !isDrawing && !searchQuery && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <button
             onClick={startDrawing}
-            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-3 border-4 border-white"
+            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 md:py-6 md:px-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-200 flex flex-col items-center gap-2 md:gap-3 border-4 border-white"
           >
             <svg
-              className="w-16 h-16"
+              className="w-12 h-12 md:w-16 md:h-16"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -266,8 +266,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
               />
             </svg>
             <div className="text-center">
-              <p className="text-2xl">Click Here to Draw Area</p>
-              <p className="text-sm text-green-100 mt-1">
+              <p className="text-lg md:text-2xl">Click Here to Draw Area</p>
+              <p className="text-xs md:text-sm text-green-100 mt-1">
                 Select a polygon on the map
               </p>
             </div>

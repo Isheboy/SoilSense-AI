@@ -86,158 +86,162 @@ const Dashboard: React.FC<DashboardProps> = ({ analysisData, timeSeries }) => {
   };
 
   return (
-    <div className="space-y-6 p-6 bg-white rounded-lg shadow-lg max-h-screen overflow-y-auto">
-      {/* Overall Score */}
-      <div className="text-center">
-        <div className="inline-flex flex-col items-center">
-          <div
-            className={`text-5xl font-bold ${getScoreColor(
-              analysisData.degradation_score
-            )}`}
-          >
-            {analysisData.degradation_score.toFixed(1)}
-          </div>
-          <div className="text-sm text-gray-500 mt-1">Degradation Score</div>
-          <div
-            className={`mt-3 px-4 py-2 rounded-full text-sm font-semibold ${getSeverityColor(
-              analysisData.severity
-            )}`}
-          >
-            {analysisData.severity}
+    <div className="h-full overflow-y-auto bg-white">
+      <div className="space-y-4 p-4">
+        {/* Overall Score */}
+        <div className="text-center py-4 bg-gradient-to-b from-gray-50 to-white rounded-lg">
+          <div className="inline-flex flex-col items-center">
+            <div
+              className={`text-4xl md:text-5xl font-bold ${getScoreColor(
+                analysisData.degradation_score
+              )}`}
+            >
+              {analysisData.degradation_score.toFixed(1)}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">Degradation Score</div>
+            <div
+              className={`mt-2 px-3 py-1.5 rounded-full text-xs font-semibold ${getSeverityColor(
+                analysisData.severity
+              )}`}
+            >
+              {analysisData.severity}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-green-50 p-3 rounded-lg border border-green-200">
-          <div className="text-xs text-green-700 font-medium">
-            Vegetation Health
+        {/* Key Metrics */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="bg-green-50 p-2.5 rounded-lg border border-green-200">
+            <div className="text-xs text-green-700 font-medium">
+              Vegetation Health
+            </div>
+            <div className="text-xl font-bold text-green-900 mt-0.5">
+              {analysisData.indicators.vegetation_health.toFixed(1)}%
+            </div>
           </div>
-          <div className="text-2xl font-bold text-green-900 mt-1">
-            {analysisData.indicators.vegetation_health.toFixed(1)}%
+          <div className="bg-blue-50 p-2.5 rounded-lg border border-blue-200">
+            <div className="text-xs text-blue-700 font-medium">
+              Moisture Level
+            </div>
+            <div className="text-xl font-bold text-blue-900 mt-0.5">
+              {analysisData.indicators.moisture_level.toFixed(1)}%
+            </div>
+          </div>
+          <div className="bg-orange-50 p-2.5 rounded-lg border border-orange-200">
+            <div className="text-xs text-orange-700 font-medium">
+              Soil Exposure
+            </div>
+            <div className="text-xl font-bold text-orange-900 mt-0.5">
+              {analysisData.indicators.soil_exposure.toFixed(1)}%
+            </div>
+          </div>
+          <div className="bg-red-50 p-2.5 rounded-lg border border-red-200">
+            <div className="text-xs text-red-700 font-medium">Erosion Risk</div>
+            <div className="text-xl font-bold text-red-900 mt-0.5">
+              {analysisData.indicators.erosion_risk.toFixed(1)}%
+            </div>
           </div>
         </div>
-        <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-          <div className="text-xs text-blue-700 font-medium">
-            Moisture Level
-          </div>
-          <div className="text-2xl font-bold text-blue-900 mt-1">
-            {analysisData.indicators.moisture_level.toFixed(1)}%
-          </div>
-        </div>
-        <div className="bg-orange-50 p-3 rounded-lg border border-orange-200">
-          <div className="text-xs text-orange-700 font-medium">
-            Soil Exposure
-          </div>
-          <div className="text-2xl font-bold text-orange-900 mt-1">
-            {analysisData.indicators.soil_exposure.toFixed(1)}%
-          </div>
-        </div>
-        <div className="bg-red-50 p-3 rounded-lg border border-red-200">
-          <div className="text-xs text-red-700 font-medium">Erosion Risk</div>
-          <div className="text-2xl font-bold text-red-900 mt-1">
-            {analysisData.indicators.erosion_risk.toFixed(1)}%
-          </div>
-        </div>
-      </div>
 
-      {/* Recommendations Section (replacing Primary Factors) */}
-      {analysisData.recommendations &&
-        analysisData.recommendations.length > 0 && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-yellow-900 mb-2">
-              � Key Recommendations
+        {/* Recommendations Section (replacing Primary Factors) */}
+        {analysisData.recommendations &&
+          analysisData.recommendations.length > 0 && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+              <h3 className="text-xs font-semibold text-yellow-900 mb-2">
+                💡 Key Recommendations
+              </h3>
+              <ul className="space-y-1">
+                {analysisData.recommendations
+                  .slice(0, 3)
+                  .map((rec: string, idx: number) => (
+                    <li
+                      key={idx}
+                      className="text-xs text-yellow-800 flex items-start"
+                    >
+                      <span className="mr-1.5 mt-0.5">•</span>
+                      <span>{rec}</span>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          )}
+
+        {/* Radar Chart */}
+        <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+          <h3 className="text-xs font-semibold text-gray-900 mb-2">
+            Soil Health Indicators
+          </h3>
+          <ResponsiveContainer width="100%" height={180}>
+            <RadarChart data={radarData}>
+              <PolarGrid />
+              <PolarAngleAxis dataKey="indicator" tick={{ fontSize: 10 }} />
+              <PolarRadiusAxis angle={90} domain={[0, 100]} />
+              <Radar
+                name="Health Score"
+                dataKey="value"
+                stroke="#10B981"
+                fill="#10B981"
+                fillOpacity={0.6}
+              />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Time Series Chart */}
+        {timeSeries && timeSeries.length > 0 && (
+          <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+            <h3 className="text-xs font-semibold text-gray-900 mb-2">
+              NDVI Time Series
             </h3>
-            <ul className="space-y-1">
-              {analysisData.recommendations
-                .slice(0, 3)
-                .map((rec: string, idx: number) => (
+            <ResponsiveContainer width="100%" height={160}>
+              <LineChart data={timeSeries}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" tick={{ fontSize: 9 }} />
+                <YAxis domain={[-1, 1]} tick={{ fontSize: 9 }} />
+                <Tooltip />
+                <Legend wrapperStyle={{ fontSize: "10px" }} />
+                <Line
+                  type="monotone"
+                  dataKey="ndvi"
+                  stroke="#10B981"
+                  strokeWidth={2}
+                  dot={{ r: 2 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+
+        {/* AI Recommendations */}
+        {analysisData.recommendations &&
+          analysisData.recommendations.length > 0 && (
+            <div className="bg-white border border-gray-200 rounded-lg p-3">
+              <h3 className="text-xs font-semibold text-gray-900 mb-2 flex items-center">
+                <span className="mr-1.5">🤖</span>
+                AI Recommendations
+              </h3>
+              <ul className="space-y-1.5">
+                {analysisData.recommendations.map((rec, idx) => (
                   <li
                     key={idx}
-                    className="text-sm text-yellow-800 flex items-start"
+                    className="text-xs text-gray-700 flex items-start"
                   >
-                    <span className="mr-2">•</span>
+                    <span className="mr-1.5 text-green-600 mt-0.5">✓</span>
                     <span>{rec}</span>
                   </li>
                 ))}
-            </ul>
+              </ul>
+            </div>
+          )}
+
+        {/* Metadata */}
+        <div className="text-xs text-gray-500 border-t pt-2">
+          <div className="flex justify-between">
+            <span>Date: {analysisData.date}</span>
+            <span>
+              Confidence: {(analysisData.confidence * 100).toFixed(0)}%
+            </span>
           </div>
-        )}
-
-      {/* Radar Chart */}
-      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">
-          Soil Health Indicators
-        </h3>
-        <ResponsiveContainer width="100%" height={200}>
-          <RadarChart data={radarData}>
-            <PolarGrid />
-            <PolarAngleAxis dataKey="indicator" tick={{ fontSize: 11 }} />
-            <PolarRadiusAxis angle={90} domain={[0, 100]} />
-            <Radar
-              name="Health Score"
-              dataKey="value"
-              stroke="#10B981"
-              fill="#10B981"
-              fillOpacity={0.6}
-            />
-          </RadarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Time Series Chart */}
-      {timeSeries && timeSeries.length > 0 && (
-        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">
-            NDVI Time Series
-          </h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={timeSeries}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} />
-              <YAxis domain={[-1, 1]} />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="ndvi"
-                stroke="#10B981"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      )}
-
-      {/* AI Recommendations */}
-      {analysisData.recommendations &&
-        analysisData.recommendations.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
-              <span className="mr-2">🤖</span>
-              AI Recommendations
-            </h3>
-            <ul className="space-y-2">
-              {analysisData.recommendations.map((rec, idx) => (
-                <li
-                  key={idx}
-                  className="text-sm text-gray-700 flex items-start"
-                >
-                  <span className="mr-2 text-green-600">✓</span>
-                  <span>{rec}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-      {/* Metadata */}
-      <div className="text-xs text-gray-500 border-t pt-3">
-        <div className="flex justify-between">
-          <span>Analysis Date: {analysisData.date}</span>
-          <span>Confidence: {(analysisData.confidence * 100).toFixed(0)}%</span>
         </div>
       </div>
     </div>
