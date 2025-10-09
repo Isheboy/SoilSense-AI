@@ -1,5 +1,6 @@
 import ee  # type: ignore
 import os
+import json
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 
@@ -9,14 +10,56 @@ from typing import Dict, List, Any
 def initialize_earth_engine() -> bool:
     """Initialize Earth Engine API"""
     try:
-        project_id = os.getenv("EARTHENGINE_PROJECT")
+        project_id = os.getenv("EARTHENGINE_PROJECT", "skillful-summer-385809")
+        credentials_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+        
+        if credentials_json:
+            # For production: use service account from environment variable
+            print("Initializing Earth Engine with service account...")
+            try:
+                credentials_dict = json.loads(credentials_json)
+                service_account = credentials_dict['client_email']
+                
+                # Write credentials to temporary file (Earth Engine needs a file)
+                import tempfile
+                with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+                    json.dump(credentials_dict, f)
+                    temp_key_file = f.name
+                
+                # Initialize with service account
+                credentials = ee.ServiceAccountCredentials(service_account, temp_key_file)  # type: ignore
+                ee.Initialize(credentials=credentials, project=project_id)  # type: ignore
+                
+                # Clean up temp file
+                os.unlink(temp_key_file)
+                
+                print(f"✓ Earth Engine initialized with service account: {service_account}")
+                return True
+            except Exception as e:
+                print(f"✗ Service account initialization failed: {e}")
+                import traceback
+                traceback.print_exc()
+        
+        # Try with project ID for local development
         if project_id:
-            ee.Initialize(project=project_id)  # type: ignore
-        else:
-            ee.Initialize()  # type: ignore
+            print(f"Initializing Earth Engine with project: {project_id}")
+            try:
+                ee.Initialize(project=project_id)  # type: ignore
+                print(f"✓ Earth Engine initialized with project: {project_id}")
+                return True
+            except Exception as e:
+                print(f"✗ Project initialization failed: {e}")
+        
+        # Fallback to default initialization
+        print("Initializing Earth Engine with default authentication")
+        ee.Initialize()  # type: ignore
+        print("✓ Earth Engine initialized with default authentication")
         return True
+        
     except Exception as e:
-        print(f"Earth Engine initialization failed: {e}")
+        print(f"✗ Earth Engine initialization failed: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 def calculate_ndvi_time_series(polygon: List[List[float]], start_date: str, end_date: str) -> List[Dict]:
